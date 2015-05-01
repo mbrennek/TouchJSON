@@ -45,6 +45,7 @@ typedef struct
     char *_start;
     NSMutableData *_scratchData;
     CFMutableDictionaryRef _stringsByHash;
+    BOOL _useSharedKeys;
     }
 @end
 
@@ -66,6 +67,7 @@ typedef struct
 
         CFDictionaryKeyCallBacks theCallbacks = {};
         _stringsByHash = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &theCallbacks, &kCFTypeDictionaryValueCallBacks);
+        _useSharedKeys = (NSFoundationVersionNumber >= NSFoundationVersionNumber10_8);
         }
     return (self);
     }
@@ -498,7 +500,7 @@ typedef struct
             }
         }
 
-    if (ioSharedKeySet != NULL && *ioSharedKeySet == NULL)
+    if (_useSharedKeys && ioSharedKeySet != NULL && *ioSharedKeySet == NULL)
         {
         *ioSharedKeySet = [NSMutableDictionary sharedKeySetForKeys:[theDictionary allKeys]];
         }
