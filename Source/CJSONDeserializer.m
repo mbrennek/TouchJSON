@@ -62,12 +62,13 @@ typedef struct
     {
     if ((self = [super init]) != NULL)
         {
+        _data = nil;
         _nullObject = [NSNull null];
         _options = kJSONDeserializationOptions_Default;
 
         CFDictionaryKeyCallBacks theCallbacks = {};
         _stringsByHash = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &theCallbacks, &kCFTypeDictionaryValueCallBacks);
-        _useSharedKeys = (NSFoundationVersionNumber >= NSFoundationVersionNumber10_8);
+        _useSharedKeys = (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_6_0);
         }
     return (self);
     }
@@ -158,7 +159,7 @@ typedef struct
 
 - (BOOL)_setData:(NSData *)inData error:(NSError **)outError;
     {
-    if (_data == inData)
+    if (_data == inData || inData.length < 1)
         {
         if (outError)
             {
